@@ -1,0 +1,64 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Оформление заказа — SportHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>📦 Оформление заказа</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'home' %}">Главная</a> /
+      <a href="{% url 'cart' %}">Корзина</a> /
+      <span>Оформление</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="checkout-layout">
+
+      <!-- FORM -->
+      <div class="checkout-form-card">
+        <h2>Данные доставки</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Адрес доставки *</label>
+            <textarea class="form-control" name="address" rows="3"
+              placeholder="Город, улица, дом, квартира" required>{{ request.POST.address }}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Номер телефона *</label>
+            <input class="form-control" type="tel" name="phone"
+              placeholder="+7 (___) ___-__-__" value="{{ request.POST.phone }}" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:1rem;">
+            Подтвердить заказ ✓
+          </button>
+        </form>
+      </div>
+
+      <!-- ORDER SUMMARY -->
+      <div class="cart-summary">
+        <h3>Ваш заказ</h3>
+        {% for item in cart.items.all %}
+        <div class="summary-row">
+          <span>{{ item.product.name }} × {{ item.quantity }}</span>
+          <span>{{ item.subtotal|floatformat:0 }} ₸</span>
+        </div>
+        {% endfor %}
+        <div class="summary-row">
+          <span>Доставка</span>
+          <span style="color:var(--orange)">Бесплатно</span>
+        </div>
+        <div class="summary-row total">
+          <span>Итого</span>
+          <span>{{ cart.total|floatformat:0 }} ₸</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

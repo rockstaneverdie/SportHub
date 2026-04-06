@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Мои заказы — SportHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>📋 Мои заказы</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'home' %}">Главная</a> / <span>Мои заказы</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if orders %}
+    {% for order in orders %}
+    <div class="order-card">
+      <dl class="order-meta">
+        <div>
+          <dt>Заказ</dt>
+          <dd>#{{ order.id }}</dd>
+        </div>
+        <div>
+          <dt>Дата</dt>
+          <dd>{{ order.created_at|date:"d.m.Y" }}</dd>
+        </div>
+        <div>
+          <dt>Товаров</dt>
+          <dd>{{ order.items.count }} шт.</dd>
+        </div>
+        <div>
+          <dt>Сумма</dt>
+          <dd>{{ order.total|floatformat:0 }} ₸</dd>
+        </div>
+        <div>
+          <dt>Статус</dt>
+          <dd><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></dd>
+        </div>
+      </dl>
+      <a href="{% url 'order_detail' order.id %}" class="btn btn-outline btn-sm">Подробнее →</a>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>У вас пока нет заказов</h3>
+      <p>Оформите первый заказ прямо сейчас!</p>
+      <a href="{% url 'catalog' %}" class="btn btn-primary">Перейти в каталог</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

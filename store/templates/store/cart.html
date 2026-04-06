@@ -1,0 +1,91 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Корзина — SportHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1>🛒 Корзина</h1>
+    <div class="breadcrumb">
+      <a href="{% url 'home' %}">Главная</a> / <span>Корзина</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if cart.items.all %}
+    <div class="cart-layout">
+
+      <!-- ITEMS -->
+      <div class="cart-items">
+        {% for item in cart.items.all %}
+        <div class="cart-item">
+          <div class="cart-item-thumb">
+            {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            {% else %}
+            {{ item.product.category.icon }}
+            {% endif %}
+          </div>
+
+          <div class="cart-item-info">
+            <a href="{% url 'product_detail' item.product.slug %}" class="cart-item-name">
+              {{ item.product.name }}
+            </a>
+            <div class="cart-item-price">{{ item.product.price|floatformat:0 }} ₸ за шт.</div>
+          </div>
+
+          <div class="cart-item-controls">
+            <form class="qty-form" action="{% url 'update_cart' item.id %}" method="post">
+              {% csrf_token %}
+              <input class="qty-input" type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}">
+              <button type="submit" class="btn btn-sm btn-outline">Обновить</button>
+            </form>
+
+            <div class="cart-subtotal">{{ item.subtotal|floatformat:0 }} ₸</div>
+
+            <form action="{% url 'remove_from_cart' item.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger" title="Удалить">✕</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="cart-summary">
+        <h3>Итого</h3>
+        <div class="summary-row">
+          <span>Товаров</span>
+          <span>{{ cart.item_count }} шт.</span>
+        </div>
+        <div class="summary-row">
+          <span>Доставка</span>
+          <span style="color:var(--orange)">Бесплатно</span>
+        </div>
+        <div class="summary-row total">
+          <span>К оплате</span>
+          <span>{{ cart.total|floatformat:0 }} ₸</span>
+        </div>
+        <a href="{% url 'checkout' %}" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:1.5rem;">
+          Оформить заказ →
+        </a>
+        <a href="{% url 'catalog' %}" class="btn btn-outline" style="width:100%; justify-content:center; margin-top:0.75rem;">
+          Продолжить покупки
+        </a>
+      </div>
+
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🛒</div>
+      <h3>Корзина пуста</h3>
+      <p>Добавьте товары из каталога, чтобы оформить заказ</p>
+      <a href="{% url 'catalog' %}" class="btn btn-primary">Перейти в каталог</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

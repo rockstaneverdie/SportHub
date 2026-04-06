@@ -1,0 +1,92 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">⚡ Новая коллекция 2025</div>
+    <h1>Снаряжение<br>для <span class="accent">победы</span></h1>
+    <p>Профессиональный спортивный инвентарь и экипировка для всех уровней подготовки. От любителя до профессионала.</p>
+    <div class="hero-actions">
+      <a href="{% url 'catalog' %}" class="btn btn-primary">Перейти в каталог →</a>
+      <a href="{% url 'catalog' %}?category=fitness" class="btn btn-outline">Фитнес</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-number">500+</div>
+      <div class="stat-label">Товаров в наличии</div>
+    </div>
+    <div>
+      <div class="stat-number">10K+</div>
+      <div class="stat-label">Довольных клиентов</div>
+    </div>
+    <div>
+      <div class="stat-number">6</div>
+      <div class="stat-label">Категорий спорта</div>
+    </div>
+    <div>
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Поддержка клиентов</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Категории <span>спорта</span></h2>
+      <a href="{% url 'catalog' %}" class="section-link">Все категории →</a>
+    </div>
+    <div class="categories-grid">
+      {% for cat in categories %}
+      <a href="{% url 'catalog' %}?category={{ cat.slug }}" class="category-card">
+        <span class="category-icon">{{ cat.icon }}</span>
+        <span class="category-name">{{ cat.name }}</span>
+      </a>
+      {% empty %}
+      <p style="color:var(--gray)">Категории не добавлены.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+{% if featured %}
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Хиты <span>продаж</span></h2>
+      <a href="{% url 'catalog' %}" class="section-link">Смотреть всё →</a>
+    </div>
+    <div class="products-grid">
+      {% for product in featured %}
+      {% include 'store/partials/product_card.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- NEW ARRIVALS -->
+{% if new_arrivals %}
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Новинки</h2>
+      <a href="{% url 'catalog' %}?sort=newest" class="section-link">Смотреть всё →</a>
+    </div>
+    <div class="products-grid">
+      {% for product in new_arrivals %}
+      {% include 'store/partials/product_card.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

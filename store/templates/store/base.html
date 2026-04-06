@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SportHub — Магазин спорттоваров{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'home' %}" class="navbar-brand">Sport<span>Hub</span></a>
+  <ul class="navbar-nav">
+    <li><a href="{% url 'home' %}">Главная</a></li>
+    <li><a href="{% url 'catalog' %}">Каталог</a></li>
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'my_orders' %}">Мои заказы</a></li>
+    <li><a href="{% url 'account' %}" style="color: var(--orange);">Аккаунт</a></li>
+    {% endif %}
+  </ul>
+  <div class="navbar-right">
+    <form class="search-form" action="{% url 'catalog' %}" method="get">
+      <input class="search-input" type="text" name="q" placeholder="Поиск товаров…" value="{{ request.GET.q }}">
+      <button class="search-btn" type="submit">🔍</button>
+    </form>
+    {% if user.is_authenticated %}
+    <a href="{% url 'cart' %}" class="cart-btn">
+      🛒 Корзина
+      {% if cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+    </a>
+    <a href="{% url 'logout' %}" class="btn-nav-ghost">Выйти</a>
+    {% else %}
+    <a href="{% url 'login' %}" class="btn-nav-ghost">Войти</a>
+    <a href="{% url 'register' %}" class="btn-nav-primary">Регистрация</a>
+    {% endif %}
+  </div>
+</nav>
+
+{% if messages %}
+<div class="messages-container" id="messages-container">
+  {% for msg in messages %}
+  <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Sport<span>Hub</span></div>
+  </div>
+</footer>
+
+<script>
+  // Auto-dismiss messages
+  const mc = document.getElementById('messages-container');
+  if (mc) setTimeout(() => mc.style.display = 'none', 4000);
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

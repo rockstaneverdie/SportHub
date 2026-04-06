@@ -1,0 +1,104 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Мой аккаунт — SportHub{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Мой аккаунт</h1>
+    </div>
+
+    {% if messages %}
+    <div class="messages-container" style="position: static; margin-bottom: 2rem;">
+      {% for msg in messages %}
+      <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="account-grid">
+      <!-- ПРОФИЛЬ -->
+      <div class="account-card">
+        <div class="account-card-header">
+          <h2>Профиль</h2>
+        </div>
+        <form method="post" class="account-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_profile">
+
+          <div class="form-group">
+            <label class="form-label">Имя пользователя</label>
+            <input class="form-control" type="text" name="username" value="{{ profile_form.username.value }}" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-control" type="email" name="email" value="{{ profile_form.email.value }}">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        </form>
+      </div>
+
+      <!-- СМЕНА ПАРОЛЯ -->
+      <div class="account-card">
+        <div class="account-card-header">
+          <h2>Смена пароля</h2>
+        </div>
+        <form method="post" class="account-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="change_password">
+
+          <div class="form-group">
+            <label class="form-label">Текущий пароль</label>
+            <input class="form-control" type="password" name="oldpassword" required>
+            {% if password_form.oldpassword.errors %}
+            <div class="form-error">{{ password_form.oldpassword.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Новый пароль</label>
+            <input class="form-control" type="password" name="new_password1" required>
+            {% if password_form.new_password1.errors %}
+            <div class="form-error">{{ password_form.new_password1.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Повторите новый пароль</label>
+            <input class="form-control" type="password" name="new_password2" required>
+            {% if password_form.new_password2.errors %}
+            <div class="form-error">{{ password_form.new_password2.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary">Изменить пароль</button>
+        </form>
+      </div>
+
+      <!-- УДАЛИТЬ АККАУНТ -->
+      <div class="account-card account-card-danger">
+        <div class="account-card-header">
+          <h2 style="color: #e53935;">Удалить аккаунт</h2>
+        </div>
+        <p style="color: var(--gray); margin-bottom: 1rem; font-size: 0.9rem;">
+          ⚠️ Это действие необратимо. Все ваши данные и заказы будут удалены.
+        </p>
+        <form method="post" class="account-form" onsubmit="return confirm('Вы уверены? Это действие нельзя отменить.');">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_account">
+
+          <div class="form-group">
+            <label class="form-label">Введите ваш пароль для подтверждения</label>
+            <input class="form-control" type="password" name="password" required>
+          </div>
+
+          <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

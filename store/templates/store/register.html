@@ -1,0 +1,60 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Регистрация — SportHub{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Регистрация</h1>
+    <p>Создайте аккаунт и начните покупки</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">Имя пользователя</label>
+        <input class="form-control" type="text" name="username" value="{{ form.username.value|default:'' }}" autofocus required>
+        {% if form.username.errors %}
+        <div class="form-error">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="form-control" type="password" name="password1" required>
+        {% if form.password1.errors %}
+        <div class="form-error">{{ form.password1.errors.0 }}</div>
+        {% endif %}
+        <div class="password-hint">
+          <small>Пароль должен содержать:</small>
+          <ul style="margin: 0.5rem 0 0 1.25rem; padding: 0; font-size: 0.85rem; color: var(--gray);">
+            <li>минимум 8 символов</li>
+            <li>буквы и цифры (не только цифры)</li>
+            <li>отличаться от имени пользователя</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Повторите пароль</label>
+        <input class="form-control" type="password" name="password2" required>
+        {% if form.password2.errors %}
+        <div class="form-error">{{ form.password2.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+      <div class="form-error" style="margin-bottom:1rem;">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:0.5rem;">
+        Создать аккаунт →
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

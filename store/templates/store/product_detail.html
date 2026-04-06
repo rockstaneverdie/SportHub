@@ -1,0 +1,90 @@
+{% extends 'store/base.html' %}
+
+{% block title %}{{ product.name }} — SportHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="{% url 'home' %}">Главная</a> /
+      <a href="{% url 'catalog' %}">Каталог</a> /
+      <a href="{% url 'catalog' %}?category={{ product.category.slug }}">{{ product.category.name }}</a> /
+      <span>{{ product.name }}</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="product-detail-grid">
+
+      <!-- IMAGE -->
+      <div class="product-detail-image">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        {{ product.category.icon }}
+        {% endif %}
+      </div>
+
+      <!-- INFO -->
+      <div class="product-detail-info">
+        <div class="product-category" style="font-size:0.85rem; margin-bottom:0.75rem;">
+          {{ product.category.icon }} {{ product.category.name }}
+        </div>
+
+        <h1>{{ product.name }}</h1>
+
+        <div class="detail-price-block">
+          <span class="detail-price">{{ product.price|floatformat:0 }} ₸</span>
+          {% if product.old_price %}
+          <span class="detail-old-price">{{ product.old_price|floatformat:0 }} ₸</span>
+          {% endif %}
+          {% if product.discount_percent %}
+          <span class="detail-discount">-{{ product.discount_percent }}%</span>
+          {% endif %}
+        </div>
+
+        {% if product.in_stock %}
+        <span class="stock-badge in-stock">✓ В наличии ({{ product.stock }} шт.)</span>
+        {% else %}
+        <span class="stock-badge out-of-stock">✗ Нет в наличии</span>
+        {% endif %}
+
+        <p class="product-description">{{ product.description }}</p>
+
+        {% if product.in_stock %}
+          {% if user.is_authenticated %}
+          <form action="{% url 'add_to_cart' product.id %}" method="post" style="display:flex; gap:1rem; flex-wrap:wrap;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="flex:1; justify-content:center;">
+              🛒 Добавить в корзину
+            </button>
+          </form>
+          {% else %}
+          <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary" style="width:100%; justify-content:center;">
+            Войдите, чтобы купить
+          </a>
+          {% endif %}
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- RELATED -->
+    {% if related %}
+    <div style="margin-top:4rem;">
+      <div class="section-header">
+        <h2 class="section-title">Похожие <span>товары</span></h2>
+      </div>
+      <div class="products-grid">
+        {% for product in related %}
+        {% include 'store/partials/product_card.html' %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

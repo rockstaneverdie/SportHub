@@ -1,0 +1,67 @@
+SportHub
+
+Файл содержит инструкции для запуска проекта и указания по подготовке к передаче преподавателю.
+
+1. Подготовка виртуального окружения
+
+cd /Users/rocksta/Desktop/dir/projects/SportHub
+python3.13 -m venv .venv
+source .venv/bin/activate
+
+2. Установка зависимостей
+
+pip install -r requirements.txt
+
+3. Применение миграций
+
+python manage.py migrate
+
+4. Запуск проекта на macOS
+
+python manage.py runserver
+
+Если порт 8000 занят, используйте:
+
+python manage.py runserver 8001
+
+4a. Запуск проекта на Windows
+
+cd \path\to\SportHub
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+
+Если порт 8000 занят, используйте:
+
+python manage.py runserver 8001
+
+5. Адрес в браузере
+
+http://127.0.0.1:8000/
+или
+http://127.0.0.1:8001/
+
+6. Статус проекта
+
+- В базе данных сейчас отсутствуют пользователи, сессии, корзины и заказы.
+- В базе сохранены только категории и товары.
+- Проект готов для проверки преподавателем без прошлой истории взаимодействий.
+
+7. Рекомендации перед отправкой
+
+- Не включайте папку .venv в архив для отправки.
+- Не включайте папки __pycache__ и staticfiles.
+- Файл db.sqlite3 можно оставить, чтобы проверяющий мог сразу запустить проект с уже заполненным каталогом товаров.
+- Если нужно создать администратора для входа в админку, выполните:
+
+python manage.py createsuperuser
+
+8. Дополнительно
+
+Если преподаватель требует, можно пересоздать базу заново и заполнить только товарами, запустив команду:
+
+python manage.py loaddata <fixture.json>
+
+(если используется фикстура)
